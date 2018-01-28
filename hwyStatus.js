@@ -101,10 +101,11 @@ request({uri: theUrl}, function(err, response, body){
 	
 							console.log(getDiffText(additions, removals));
 							var txtTxt = 'additions:' + additions.length + 'removals:' + removals.length + ' site: ' + theUrl
+							var diffTxt = getDiffText(additions, removals);
 							// parse contacts and tixt em
 							var contactsFile = JSON.parse(fs.readFileSync('./contacts.json', 'utf8'));
 							contactsFile.contacts.forEach( function (contact) {
-								textMe(getDiffText(additions, removals), contact);
+								textMe(diffTxt, contact);
 							});
 						}
 					}
