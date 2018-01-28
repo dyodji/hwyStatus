@@ -12,8 +12,8 @@ var express = require('express')
 , http = require('http')
 , fs = require("fs");
 
-var path = "/home/gstark/bin/hwyStatus/lastStatus.json";
-var bakPath = "/home/gstark/bin/hwyStatus/lastStatus.bak";
+var path = "./lastStatus.json";
+var bakPath = "./lastStatus.bak";
 var hwyStatus = express();
 var server = http.createServer();
 var theUrl = 'http://www.dot.ca.gov/cgi-bin/roads.cgi?roadnumber=17+35+9&submit=Search';
