@@ -70,9 +70,12 @@ request({uri: theUrl}, function(err, response, body){
 						}
 					}
 				);
+				
 				var error = false;
 				if(typeof thisStatus === "undefined" || thisStatus === ""){
-						emailMe("thisStatus was blank, didn't get data from caltrans", 'dyodji@gmail.com');
+					
+					emailMe("thisStatus was blank, didn't get data from caltrans", 'dyodji@gmail.com');
+					
 				} else {
 	
 					var lastStatus = fs.readFileSync(path, 'utf8');
@@ -86,27 +89,27 @@ request({uri: theUrl}, function(err, response, body){
 	
 					} else {
 	
-							if(lastStatus === thisStatus){
+						if(lastStatus === thisStatus){
 							console.log("["+ new Date().toLocaleString()+"] " + chalk.red.bgWhite("NO CHANGE!!!"));
-							} else {
+						} else {
 							var lJson = parseResultToJson(lastStatus);
 							var tJson = parseResultToJson(thisStatus);
-							var additions = getAdditions(lJson,tJson);
-							var removals = getRemovals(lJson,tJson);
+							var additions = getListDiff(tJson,lJson);
+							var removals = getListDiff(lJson,tJson);
 							
 							console.log("["+ new Date().toLocaleString() +"] " + chalk.blue.bgGreen("Oh Good God what now?! Tell the world!!"));
 	
 							console.log(getDiffText(additions, removals));
-								  var txtTxt = 'additions:' + additions.length + 'removals:' + removals.length + ' site: ' + theUrl
+							var txtTxt = 'additions:' + additions.length + 'removals:' + removals.length + ' site: ' + theUrl
 							// parse contacts and tixt em
 							$.getJSON("contacts.json", function(json) {
-								contacts.forEach( function (contact){
+								json.contacts.forEach( function (contact){
 										textMe(getDiffText(additions, removals), contact);
 								});
 							});
 						}
 					}
-						writeToLastStatus(thisStatus);
+					writeToLastStatus(thisStatus);
 				}
 			} // end err
 		}
@@ -178,42 +181,32 @@ function clearLastStatus() {
 	});
 }
 
-function textMe(str,to, additions, removals) {
+function textMe(str,to) {
+	
+	var guser = ""
+	var gpass = ""
+	
+	$.getJSON("creds.json", function(json) {
+		guser = json.user
+		gpass = json.pass
+	});
+
 	var send = require('gmail-send')({
-	  user: 'nosir', // Your GMail account used to send emails
-	  pass: 'nosir', // Application-specific password
+	  user: guser, // Your GMail account used to send emails
+	  pass: gpass, // Application-specific password
 	  to:   to,	  // Send back to yourself 
-	  // from:   '"User" <user@gmail.com>'  // from: by default equals to user 
-	  // replyTo:'user@gmail.com'		   // replyTo: by default undefined 
 	  subject: 'HwyStsAlrt: Smn dn chgd!',
 	  text:	str
-	  // html:	'<b>html text text</b>' 
 	});
 		 
 	// Override any default option and send email 
 	send({						 
-		subject: 'Hwy Status Alert: Summin dun changed',   // Override value set as default  
+		subject: 'HwyStsAlrt: Smn dn chgd!',   // Override value set as default
 	}, function (err, res) {
 		console.log('['+new Date().toLocaleString()+'] [tixting: '+to+'] [msg: '+ str +'] err:', err, '; res:', res);
 	});
 }
 
 function emailMe(str, to) {
-	var send = require('gmail-send')({
-	  user: 'nosir',			   // Your GMail account used to send emails
-	  pass: 'nosir',			 // Application-specific password
-	  to:   to,	  // Send back to yourself 
-	  // from:   '"User" <user@gmail.com>'  // from: by default equals to user 
-	  // replyTo:'user@gmail.com'		   // replyTo: by default undefined 
-	  subject: 'Hwy Status Alert: Summin dun changed',
-	  text:	str + "\n\nVIA: " + theUrl
-	  // html:	'<b>html text text</b>' 
-	});
-		 
-	// Override any default option and send email 
-	send({						 
-	  subject: 'Hwy Status Alert: Summin dun changed',   // Override value set as default  
-	}, function (err, res) {
-	  console.log('['+ new Date().toLocaleString() +'] [mailing: '+to+']  [msg: '+ str +'] err:', err, '; res:', res);
-	});
+	textMe(str + "\n\nVIA: " + theUrl, to)
 }
