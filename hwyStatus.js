@@ -102,8 +102,8 @@ request({uri: theUrl}, function(err, response, body){
 							console.log(getDiffText(additions, removals));
 							var txtTxt = 'additions:' + additions.length + 'removals:' + removals.length + ' site: ' + theUrl
 							// parse contacts and tixt em
-							var contacts = JSON.parse(fs.readFileSync('./contacts.json', 'utf8'));
-							contacts.forEach( function (contact) {
+							var contactsFile = JSON.parse(fs.readFileSync('./contacts.json', 'utf8'));
+							contactsFile.contacts.forEach( function (contact) {
 								textMe(getDiffText(additions, removals), contact);
 							});
 						}
