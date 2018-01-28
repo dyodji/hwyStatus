@@ -31,85 +31,85 @@ request({uri: theUrl}, function(err, response, body){
   	html: body,
   	scripts: ['http://code.jquery.com/jquery-1.6.min.js'],
   	done:
-  	function(err, window){
-  		if(err){
-  			//textMe("ERROR: SUMMIN DUN GONE WRONG!", '8318189773@vtext.com');
-  			emailMe("ERROR: SUMMIN DUN GONE WRONG!", 'dyodji@gmail.com');
-  			//emailMe("ERROR: SUMMIN DUN GONE WRONG!", 'gstark@study.com');
-  		} else {
-
-  			//Use jQuery just as in a regular HTML page
-  			var $ = window.jQuery;
-  			var rte = "";
-  			var rtes = 0;
-  			var byRte = {};
-  			var newRte = true;
-  			
-  			var thisStatus = "";
-  			$("h3").nextUntil("hr").each(
-  				function() {
-  					var $self = $(this);
-  					var updates = $self.text().split("\n\n\n\n\n");
-  					if ($self.prev("h3").text() != "") {
-  						rtes++;
-  						rte =  $self.prev("h3").text().replace("\n","");
-  						newRte = true;
-  						if(rtes > 1) {thisStatus += "\n"}
-  						thisStatus += rte.trim() +":\n";
-  					} else {
-  						newRte = false;
-  					}
-
-  					if(rte.startsWith("SR")) {
-  						updates.forEach(function (upTxt) {
-  							upTxt = upTxt.replace(/\n/g,"").replace(/\s\s+/g, ' ').replace(" [IN THE CENTRAL CALIFORNIA AREA]","").trim();
-  							if(upTxt !== "") {
-  								thisStatus += "\t**" + upTxt + "\n";
-  							}
-  						});
-  					}
-    				}
-  			);
-  			var error = false;
-  			if(typeof thisStatus === "undefined" || thisStatus === ""){
-		        	emailMe("thisStatus was blank, didn't get data from caltrans", 'dyodji@gmail.com');
-        		} else { 
-
-  				var lastStatus = fs.readFileSync(path, 'utf8');
-
-  				console.log("THIS:\n" + chalk.green(thisStatus));
-  				console.log("LAST:\n" + chalk.red(lastStatus));
-
-  				if(lastStatus === "" || typeof lastStatus === "undefined"){
-
-  					emailMe("lastStatus was blank, didn't get data from caltrans", 'dyodji@gmail.com');
-
-  				} else {
-
-    					if(lastStatus === thisStatus){
-  						console.log("["+ new Date().toLocaleString()+"] " + chalk.red.bgWhite("NO CHANGE!!!"));
-  	   				} else {
-  						var lJson = parseResultToJson(lastStatus);
-  						var tJson = parseResultToJson(thisStatus);
-  						var additions = getAdditions(lJson,tJson);
-  						var removals = getRemovals(lJson,tJson);
-  						  
-  						console.log("["+ new Date().toLocaleString() +"] " + chalk.blue.bgGreen("Oh Good God what now?! Tell the world!!"));
-
-  						console.log(getDiffText(additions, removals));
-					        var txtTxt = 'additions:' + additions.length + 'removals:' + removals.length + ' site: ' + theUrl  
-						// parse contacts and tixt em
-						$.getJSON("contacts.json", function(json) {
-							contacts.forEach( function (contact){
-						    		textMe(getDiffText(additions, removals), contact);
+		function(err, window){
+			if(err){
+				//textMe("ERROR: SUMMIN DUN GONE WRONG!", '8318189773@vtext.com');
+				emailMe("ERROR: SUMMIN DUN GONE WRONG!", 'dyodji@gmail.com');
+				//emailMe("ERROR: SUMMIN DUN GONE WRONG!", 'gstark@study.com');
+			} else {
+	
+				//Use jQuery just as in a regular HTML page
+				var $ = window.jQuery;
+				var rte = "";
+				var rtes = 0;
+				var byRte = {};
+				var newRte = true;
+				
+				var thisStatus = "";
+				$("h3").nextUntil("hr").each(
+					function() {
+						var $self = $(this);
+						var updates = $self.text().split("\n\n\n\n\n");
+						if ($self.prev("h3").text() != "") {
+							rtes++;
+							rte =  $self.prev("h3").text().replace("\n","");
+							newRte = true;
+							if(rtes > 1) {thisStatus += "\n"}
+							thisStatus += rte.trim() +":\n";
+						} else {
+							newRte = false;
+						}
+	
+						if(rte.startsWith("SR")) {
+							updates.forEach(function (upTxt) {
+								upTxt = upTxt.replace(/\n/g,"").replace(/\s\s+/g, ' ').replace(" [IN THE CENTRAL CALIFORNIA AREA]","").trim();
+								if(upTxt !== "") {
+									thisStatus += "\t**" + upTxt + "\n";
+								}
 							});
-						});
-  			   		}            
-  		  		}   
-	        		writeToLastStatus(thisStatus);          
-  			}
-  			} // end err
-  		}
+						}
+					}
+				);
+				var error = false;
+				if(typeof thisStatus === "undefined" || thisStatus === ""){
+						emailMe("thisStatus was blank, didn't get data from caltrans", 'dyodji@gmail.com');
+				} else {
+	
+					var lastStatus = fs.readFileSync(path, 'utf8');
+	
+					console.log("THIS:\n" + chalk.green(thisStatus));
+					console.log("LAST:\n" + chalk.red(lastStatus));
+	
+					if(lastStatus === "" || typeof lastStatus === "undefined"){
+	
+						emailMe("lastStatus was blank, didn't get data from caltrans", 'dyodji@gmail.com');
+	
+					} else {
+	
+							if(lastStatus === thisStatus){
+							console.log("["+ new Date().toLocaleString()+"] " + chalk.red.bgWhite("NO CHANGE!!!"));
+							} else {
+							var lJson = parseResultToJson(lastStatus);
+							var tJson = parseResultToJson(thisStatus);
+							var additions = getAdditions(lJson,tJson);
+							var removals = getRemovals(lJson,tJson);
+							
+							console.log("["+ new Date().toLocaleString() +"] " + chalk.blue.bgGreen("Oh Good God what now?! Tell the world!!"));
+	
+							console.log(getDiffText(additions, removals));
+								  var txtTxt = 'additions:' + additions.length + 'removals:' + removals.length + ' site: ' + theUrl
+							// parse contacts and tixt em
+							$.getJSON("contacts.json", function(json) {
+								contacts.forEach( function (contact){
+										textMe(getDiffText(additions, removals), contact);
+								});
+							});
+						}
+					}
+						writeToLastStatus(thisStatus);
+				}
+			} // end err
+		}
 	});
 });
 
@@ -130,16 +130,16 @@ function getDiffText(additions, removals) {
 
 // returns List of Status (Strings) which were in lookForStatuses but not in LookInStatuses 
 function getListDiff(lookForStatuses, lookInStatuses) {
-  var diffs = [];
-  for (rte in lookForStatuses) {
- 	var arrayLength = lookForStatuses[rte].length;
-  	for (var i = 0; i < arrayLength; i++) {
-	    if(!lookInStatuses[rte].includes(lookForStatuses[rte][i])){
-		diffs.push(rte + ":" + lookForStatuses[rte][i])
-	    }
-  	}
-  }
-  return diffs;
+	var diffs = [];
+	for (rte in lookForStatuses) {
+		var arrayLength = lookForStatuses[rte].length;
+		for (var i = 0; i < arrayLength; i++) {
+			if(!lookInStatuses[rte].includes(lookForStatuses[rte][i])){
+				diffs.push(rte + ":" + lookForStatuses[rte][i])
+			}
+		}
+	}
+	return diffs;
 }
 
 function parseResultToJson(result) {
@@ -153,8 +153,7 @@ function parseResultToJson(result) {
 		if (lines[line].startsWith("SR")){
 		  rte = lines[line];
 		  rtes[rte] = [];
-		}
-		else if (pattern.test(lines[line])) {
+		} else if (pattern.test(lines[line])) {
 		  rtes[rte].push(lines[line])
 		}
 	};
@@ -181,12 +180,12 @@ function clearLastStatus() {
 
 function textMe(str,to, additions, removals) {
 	var send = require('gmail-send')({
-	  user: 'dyodji@gmail.com',			   // Your GMail account used to send emails 
-	  pass: 'mvpeduprkxqnjgss',			 // Application-specific password 
+	  user: 'nosir', // Your GMail account used to send emails
+	  pass: 'nosir', // Application-specific password
 	  to:   to,	  // Send back to yourself 
 	  // from:   '"User" <user@gmail.com>'  // from: by default equals to user 
 	  // replyTo:'user@gmail.com'		   // replyTo: by default undefined 
-	  subject: 'Hwy Status Alert: Summin dun changed',
+	  subject: 'HwyStsAlrt: Smn dn chgd!',
 	  text:	str
 	  // html:	'<b>html text text</b>' 
 	});
@@ -201,8 +200,8 @@ function textMe(str,to, additions, removals) {
 
 function emailMe(str, to) {
 	var send = require('gmail-send')({
-	  user: 'dyodji@gmail.com',			   // Your GMail account used to send emails 
-	  pass: 'mvpeduprkxqnjgss',			 // Application-specific password 
+	  user: 'nosir',			   // Your GMail account used to send emails
+	  pass: 'nosir',			 // Application-specific password
 	  to:   to,	  // Send back to yourself 
 	  // from:   '"User" <user@gmail.com>'  // from: by default equals to user 
 	  // replyTo:'user@gmail.com'		   // replyTo: by default undefined 
