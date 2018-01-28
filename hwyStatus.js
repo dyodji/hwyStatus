@@ -137,7 +137,7 @@ function getListDiff(lookForStatuses, lookInStatuses) {
 	for (rte in lookForStatuses) {
 		var arrayLength = lookForStatuses[rte].length;
 		for (var i = 0; i < arrayLength; i++) {
-			if(lookInStatuses[rte] === "undefined" || !lookInStatuses[rte].includes(lookForStatuses[rte][i])){
+			if(typeof lookInStatuses[rte] === "undefined" || !lookInStatuses[rte].includes(lookForStatuses[rte][i])){
 				diffs.push(rte + ":" + lookForStatuses[rte][i])
 			}
 		}
