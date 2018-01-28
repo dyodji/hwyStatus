@@ -1,3 +1,4 @@
+*.bak
 creds.json
 lastStatus.json
 
