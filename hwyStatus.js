@@ -55,7 +55,7 @@ request({uri: theUrl}, function(err, response, body){
 							rte =  $self.prev("h3").text().replace("\n","");
 							newRte = true;
 							if(rtes > 1) {thisStatus += "\n"}
-							thisStatus += rte.trim() +":\n";
+							thisStatus += rte.trim() +":";
 						} else {
 							newRte = false;
 						}
