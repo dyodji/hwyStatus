@@ -119,12 +119,12 @@ function getDiffText(additions, removals) {
   
   var out = "ADDITIONS:\n";
   additions.forEach(function(element) {
-    out += element +"\n";
+    out += element +"\n\n";
   });
   
   out += "\n\nREMOVALS:\n";
   removals.forEach(function(element) {
-    out += element +"\n";
+    out += element +"\n\n";
   });
   
   return out;
