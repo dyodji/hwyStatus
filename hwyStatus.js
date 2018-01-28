@@ -64,7 +64,7 @@ request({uri: theUrl}, function(err, response, body){
 							updates.forEach(function (upTxt) {
 								upTxt = upTxt.replace(/\n/g,"").replace(/\s\s+/g, ' ').replace(" [IN THE CENTRAL CALIFORNIA AREA]","").trim();
 								if(upTxt !== "") {
-									thisStatus += "\t**" + upTxt + "\n";
+									thisStatus += "\t** " + upTxt + "\n";
 								}
 							});
 						}
@@ -137,7 +137,7 @@ function getListDiff(lookForStatuses, lookInStatuses) {
 	for (rte in lookForStatuses) {
 		var arrayLength = lookForStatuses[rte].length;
 		for (var i = 0; i < arrayLength; i++) {
-			if(!lookInStatuses[rte].includes(lookForStatuses[rte][i])){
+			if(lookInStatuses[rte] === "undefined" || !lookInStatuses[rte].includes(lookForStatuses[rte][i])){
 				diffs.push(rte + ":" + lookForStatuses[rte][i])
 			}
 		}
