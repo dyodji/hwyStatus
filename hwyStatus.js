@@ -102,8 +102,8 @@ request({uri: theUrl}, function(err, response, body){
 							console.log(getDiffText(additions, removals));
 							var txtTxt = 'additions:' + additions.length + 'removals:' + removals.length + ' site: ' + theUrl
 							// parse contacts and tixt em
-							$.getJSON("contacts.json", function(json) {
-								json.contacts.forEach( function (contact){
+							$.getJSON("./contacts.json", function(json) {
+								json.contacts.forEach( function (contact) {
 										textMe(getDiffText(additions, removals), contact);
 								});
 							});
@@ -186,7 +186,7 @@ function textMe(str,to) {
 	var guser = ""
 	var gpass = ""
 	
-	$.getJSON("creds.json", function(json) {
+	$.getJSON("./creds.json", function(json) {
 		guser = json.user
 		gpass = json.pass
 	});
