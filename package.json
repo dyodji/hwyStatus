@@ -1,0 +1,14 @@
+{
+  "name": "hwyStatus",
+  "version": "1.0.1",
+  "description": "",
+  "main": "hwyStatus.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "dyodji",
+  "license" : "SEE LICENSE IN ./LICENSE",
+  "bin": {
+    "hwyStatus": "./hwyStatus.js"
+  }
+}
