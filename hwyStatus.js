@@ -102,10 +102,9 @@ request({uri: theUrl}, function(err, response, body){
 							console.log(getDiffText(additions, removals));
 							var txtTxt = 'additions:' + additions.length + 'removals:' + removals.length + ' site: ' + theUrl
 							// parse contacts and tixt em
-							$.getJSON("./contacts.json", function(json) {
-								json.contacts.forEach( function (contact) {
-										textMe(getDiffText(additions, removals), contact);
-								});
+							var contacts = JSON.parse(fs.readFileSync('./contacts.json', 'utf8'));
+							contacts.forEach( function (contact) {
+								textMe(getDiffText(additions, removals), contact);
 							});
 						}
 					}
@@ -183,17 +182,10 @@ function clearLastStatus() {
 
 function textMe(str,to) {
 	
-	var guser = ""
-	var gpass = ""
-	
-	$.getJSON("./creds.json", function(json) {
-		guser = json.user
-		gpass = json.pass
-	});
-
+	var creds = JSON.parse(fs.readFileSync("./creds.json", 'utf8'));
 	var send = require('gmail-send')({
-	  user: guser, // Your GMail account used to send emails
-	  pass: gpass, // Application-specific password
+	  user: creds.user, // Your GMail account used to send emails
+	  pass: creds.pass, // Application-specific password
 	  to:   to,	  // Send back to yourself 
 	  subject: 'HwyStsAlrt: Smn dn chgd!',
 	  text:	str
